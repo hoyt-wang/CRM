@@ -37,7 +37,7 @@
 
         <form method="post">
             <div class="form-group has-feedback">
-                <input type="tel" class="form-control" name="mobile" placeholder="手机号码" value="111">
+                <input type="tel" class="form-control" name="mobile" placeholder="手机号码" value="151">
                 <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
             </div>
             <div class="form-group has-feedback">

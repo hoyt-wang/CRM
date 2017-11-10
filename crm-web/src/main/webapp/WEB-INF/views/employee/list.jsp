@@ -270,16 +270,6 @@
         });
 
 
-
-
-
-
-
-
-
-
-
-
         //左侧树
         $("#addDept").click(function () {
             layer.prompt({title:"请输入部门名称"},function(text,index){
@@ -324,6 +314,7 @@
                 }
             }
         };
+
 
 
         function ajaxDataFilter(treeId, parentNode, responseData) {

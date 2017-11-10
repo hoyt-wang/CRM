@@ -63,4 +63,5 @@ public interface AccountService {
      * @param deptId
      */
     void saveNewEmployee(String userName, String mobile, String password, Integer[] deptId);
+
 }

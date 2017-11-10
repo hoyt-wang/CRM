@@ -20,8 +20,8 @@
             <li class="${param.menu == 'home' ? 'active' : ''}"><a href="/home"><i class="fa fa-home"></i> <span>首页</span></a></li>
             <li class="header">系统功能</li>
             <!-- 客户管理 -->
-            <li class="treeview">
-                <a href="#">
+            <li class="${param.menu == 'treeview' ? 'active' : ''}">
+                <a href="/customer">
                     <i class="fa fa-address-book-o"></i> <span>客户管理</span>
                     <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>

@@ -163,7 +163,6 @@ public class AccountServiceImpl implements AccountService{
         //2.删除account_dept的关联关系
         AccountDeptExample accountDeptExample = new AccountDeptExample();
         accountDeptExample.createCriteria().andAccountIdEqualTo(id);
-        accountDeptMapper.deleteByExample(accountDeptExample);
         //3.删除账号
         accountMapper.deleteByPrimaryKey(id);
     }

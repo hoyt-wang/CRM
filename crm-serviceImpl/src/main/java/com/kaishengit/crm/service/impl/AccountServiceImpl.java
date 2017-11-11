@@ -176,7 +176,7 @@ public class AccountServiceImpl implements AccountService{
     @Override
     @Transactional
     public void saveNewEmployee(String userName, String mobile, String password, Integer[] deptIds) {
-
+        //TODO mdd5 登录密码
         //1.验证手机号是否被使用
         AccountExample accountExample = new AccountExample();
         accountExample.createCriteria().andMobileEqualTo(mobile);
@@ -203,6 +203,15 @@ public class AccountServiceImpl implements AccountService{
         }
 
         logger.info("添加新账号 {}",userName);
+    }
+
+    /**
+     * 获得所有账号
+     * @return
+     */
+    @Override
+    public List<Account> findAllAccount() {
+        return accountMapper.selectByExample(new AccountExample());
     }
 
 

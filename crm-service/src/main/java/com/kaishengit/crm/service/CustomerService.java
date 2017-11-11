@@ -1,8 +1,11 @@
 package com.kaishengit.crm.service;
 
 import com.github.pagehelper.PageInfo;
+import com.kaishengit.crm.entity.Account;
 import com.kaishengit.crm.entity.Customer;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +27,17 @@ public interface CustomerService {
     PageInfo<Customer> findByAccountId(Integer pageNo);
 
     /**
+     * 查找客户所属行业名称
+     * @return
+     */
+    List<String> findAllCustomerTrade();
+
+    /**
+     * 查找客户来源名称
+     * @return
+     */
+    List<String> findAllCustomerSource();
+    /**
      * 新增客户
      * @param customer
      */
@@ -40,4 +54,39 @@ public interface CustomerService {
      * @param customer
      */
     void editCustomer(Customer customer);
+
+    /**
+     * 根据当前账号查找对应的客户列表
+     * @param pageNo
+     * @param account
+     * @return
+     */
+    PageInfo<Customer> pageForMyCustomer(Integer pageNo, Account account);
+
+    /**
+     * 将指定的客户放入公海
+     * @param customer
+     */
+    void publicCustomer(Customer customer);
+
+    /**
+     * 转交客户
+     * @param customer 被转交的客户
+     * @param toAccountId 转入账号id
+     */
+    void transferCustomer(Customer customer, Integer toAccountId);
+
+    /**
+     * 导出客户资料文件为csv格式
+     * @param outputStream
+     * @param account
+     */
+    void exportCsvFileToOutputStream(OutputStream outputStream, Account account) throws IOException;
+
+    /**
+     * 导出客户资料文件为xls格式
+     * @param outputStream
+     * @param account
+     */
+    void exportXlsFileToOutputStream(OutputStream outputStream, Account account) throws IOException;
 }

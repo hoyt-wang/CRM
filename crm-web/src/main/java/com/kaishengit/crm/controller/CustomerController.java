@@ -1,10 +1,13 @@
 package com.kaishengit.crm.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.kaishengit.crm.controller.exception.ForbideenException;
+import com.kaishengit.crm.controller.exception.NotFoundException;
 import com.kaishengit.crm.entity.Account;
 import com.kaishengit.crm.entity.Customer;
 import com.kaishengit.crm.example.CustomerExample;
 import com.kaishengit.crm.exception.ServiceException;
+import com.kaishengit.crm.service.AccountService;
 import com.kaishengit.crm.service.CustomerService;
 import com.kaishengit.web.result.AjaxResult;
 import com.sun.org.apache.xpath.internal.operations.Mod;
@@ -14,7 +17,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 
 /**
@@ -23,22 +29,39 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/customer")
-public class CustomerController {
+public class CustomerController extends BaseController{
 
     @Autowired
     private CustomerService customerService;
 
+    @Autowired
+    private AccountService accountService;
+
+    /**
+     * 客户列表
+     * @param pageNo
+     * @param session
+     * @param model
+     * @return
+     */
     @GetMapping("/my")
     public String my(@RequestParam(name = "p",required = false,defaultValue = "1") Integer pageNo,
                      HttpSession session, Model model) {
-        Account account = (Account) session.getAttribute("curr_account");
-        PageInfo<Customer> pageInfo = customerService.findByAccountId(pageNo);
+        Account account = getCurrAccount(session);
+        PageInfo<Customer> pageInfo = customerService.pageForMyCustomer(pageNo,account);
         model.addAttribute("pageInfo",pageInfo);
         return "customer/my";
     }
 
+    /**
+     * 添加新客户
+     * @param model
+     * @return
+     */
     @GetMapping("/new")
-    public String saveNewCustomer() {
+    public String saveNewCustomer(Model model) {
+        model.addAttribute("trades",customerService.findAllCustomerTrade());
+        model.addAttribute("sources",customerService.findAllCustomerSource());
         return "customer/new";
     }
 
@@ -55,17 +78,52 @@ public class CustomerController {
         }
     }
 
-    @GetMapping("/{id:\\d+}")
+
+    /**
+     * 客户详情
+     * @param id
+     * @param model
+     * @param session
+     * @return
+     */
+    @GetMapping("/my/{id:\\d+}")
     //@RequestMapping(value = "/{id\\d+}", method = RequestMethod.GET)
-    public String showCustomer(@PathVariable Integer id, Model model) {
-        Customer customer = customerService.findById(id);
+    public String showCustomer(@PathVariable Integer id, Model model,HttpSession session) {
+        Customer customer = validateCustomer(id, session);
+        model.addAttribute("accountList",accountService.findAllAccount());
         model.addAttribute("customer",customer);
         return "customer/show";
     }
 
+    /**
+     * 验证客户是否属于当前登录的对象
+     * @param id
+     * @param session
+     * @return
+     */
+    private Customer validateCustomer(@PathVariable Integer id, HttpSession session) {
+        //根据ID查找客户//根据ID查找客户
+        Customer customer = customerService.findById(id);
+        if(customer == null) {
+            //404
+            throw new NotFoundException("找不到" + id + "对应的客户");
+        }
+        Account account = getCurrAccount(session);
+        if(!customer.getAccountId().equals(account.getId())) {
+            //403
+            throw new ForbideenException("没有查看客户"+ id + "的权限");
+        }
+        return customer;
+    }
+
     @GetMapping("/{id:\\d+}/edit")
-    public String editProduct(@PathVariable Integer id,Model model) {
-        model.addAttribute("customer",customerService.findById(id));
+    public String editProduct(@PathVariable Integer id,
+                              HttpSession session,
+                              Model model) {
+        Customer customer = validateCustomer(id,session);
+        model.addAttribute("customer",customerService.findById(customer.getId()));
+        model.addAttribute("trades",customerService.findAllCustomerTrade());
+        model.addAttribute("sources",customerService.findAllCustomerSource());
         return "customer/edit";
     }
 
@@ -77,9 +135,79 @@ public class CustomerController {
     }
 
     @GetMapping("/{id:\\d+}/delete")
-    public String delCustomer(@PathVariable Integer id, Model model) {
-        customerService.delCustomerById(id);
+    public String delCustomer(@PathVariable Integer id,
+                              HttpSession session,
+                              Model model) {
+        Customer customer = validateCustomer(id,session);
+        customerService.delCustomerById(customer.getId());
         return "redirect:/customer/my";
+    }
+
+    /**
+     * 放入公海
+     * @param id
+     * @param session
+     * @param redirectAttributes
+     * @return
+     */
+    @GetMapping("/my/{id:\\d+}/public")
+    public String publicCustomer(@PathVariable Integer id,
+                                 HttpSession session,
+                                 RedirectAttributes redirectAttributes) {
+        Customer customer = validateCustomer(id,session);
+        customerService.publicCustomer(customer);
+        redirectAttributes.addFlashAttribute("message","已经将该客户放入公海");
+        return "redirect:/customer/my";
+    }
+
+    /**
+     * 公海客户列表
+     * @return
+     */
+    @GetMapping("/public")
+    public String publicCustomer(Model model) {
+        return "customer/public";
+    }
+
+    @GetMapping("/my/{customerId:\\d+}/transfer/{toAccountId:\\d+}")
+    public String transferCustomer(@PathVariable Integer customerId,
+                                   @PathVariable Integer toAccountId,
+                                   HttpSession session,
+                                   RedirectAttributes redirectAttributes) {
+        Customer customer = validateCustomer(customerId,session);
+        customerService.transferCustomer(customer,toAccountId);
+        redirectAttributes.addFlashAttribute("message","客户转交成功");
+        return "redirect:/customer/my";
+    }
+
+    /**
+     * 将数据导出为csv文件
+     */
+    @GetMapping("/my/export.csv")
+    public void exportCsvData(HttpServletResponse response,
+                              HttpSession session) throws IOException {
+        Account account = getCurrAccount(session);
+        //setContentType表示具体请求中的媒体类型信息
+        response.setContentType("text/csv;charset=GBK");
+        String fileName = new String("我的客户.csv".getBytes("UTF-8"),"ISO8859-1");
+        response.addHeader("Content-Disposition","attachment; filename=\""+fileName+"\"");
+
+        OutputStream outputStream = response.getOutputStream();
+        customerService.exportCsvFileToOutputStream(outputStream,account);
+    }
+
+    @GetMapping("/my/export.xls")
+    public void exportXlsData(HttpServletResponse response,
+                              HttpSession session) throws IOException {
+        Account account = getCurrAccount(session);
+        //setContentType表示具体请求中的媒体类型信息
+        response.setContentType("application/vnd.ms-excel");
+        String fileName = new String("我的客户.csv".getBytes("UTF-8"),"ISO8859-1");
+
+        response.setHeader("Content-Disposition","attachment; filename=\""+ fileName +"\"");
+
+        OutputStream outputStream = response.getOutputStream();
+        customerService.exportXlsFileToOutputStream(outputStream,account);
     }
 
 /*    *//**

@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html>
@@ -38,9 +39,21 @@
                 </div>
                 <div class="box-body">
                     <form action="" method="post" id="addForm">
+                        <input type="hidden" name="accountId" value="${sessionScope.curr_account.id}">
                         <div class="form-group">
                             <label>姓名</label>
                             <input type="text" name="custName" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>性别</label>
+                            <div>
+                                <label class="radio-inline">
+                                    <input type="radio" name="sex" value="先生" checked> 先生
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="sex" value="女士"> 女士
+                                </label>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label>职位</label>
@@ -59,21 +72,18 @@
                             <label>所属行业</label>
                             <select name="trade" class="form-control">
                                 <option value=""></option>
-                                <option value="互联网">互联网</option>
-                                <option value="电力能源">电力能源</option>
-                                <option value="其他">其他</option>
+                               <c:forEach items="${trades}" var="trade">
+                                   <option value="${trade}">${trade}</option>
+                               </c:forEach>
                             </select>
                         </div>
                         <div class="form-group">
                             <label>客户来源</label>
                             <select name="source" class="form-control">
                                 <option value=""></option>
-                                <option value="DM广告">DM广告</option>
-                                <option value="电视媒体">电视媒体</option>
-                                <option value="网络媒体">网络媒体</option>
-                                <option value="顾客推荐">顾客推荐</option>
-                                <option value="主动上门">主动上门</option>
-                                <option value="其他">其他</option>
+                                <c:forEach items="${sources}" var="source">
+                                    <option value="${source}">${source}</option>
+                                </c:forEach>
                             </select>
                         </div>
                         <div class="form-group">

@@ -64,4 +64,9 @@ public interface AccountService {
      */
     void saveNewEmployee(String userName, String mobile, String password, Integer[] deptId);
 
+    /**
+     * 获得所有账号
+     * @return
+     */
+    List<Account> findAllAccount();
 }

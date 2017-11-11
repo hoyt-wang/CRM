@@ -1,3 +1,4 @@
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!-- 左侧菜单栏 -->
 <aside class="main-sidebar">
@@ -20,7 +21,8 @@
             <li class="${param.menu == 'home' ? 'active' : ''}"><a href="/home"><i class="fa fa-home"></i> <span>首页</span></a></li>
             <li class="header">系统功能</li>
             <!-- 客户管理 -->
-            <li class="${param.menu == 'treeview' ? 'active' : ''}">
+
+            <li  class="treeview ${fn:startsWith(param.menu, 'customer_') ? 'active' : ''}">
                 <a href="/customer">
                     <i class="fa fa-address-book-o"></i> <span>客户管理</span>
                     <span class="pull-right-container">
@@ -28,8 +30,8 @@
             </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="/customer/my"><i class="fa fa-circle-o"></i> 我的客户</a></li>
-                    <li><a href="/customer/public"><i class="fa fa-circle-o"></i> 公海客户</a></li>
+                    <li class="${param.menu == 'customer_my' ? 'active' : ''}" ><a href="/customer/my"><i class="fa fa-circle-o"></i> 我的客户</a></li>
+                    <li class="${param.menu == 'customer_public' ? 'active' : ''}"><a href="/customer/public"><i class="fa fa-circle-o"></i> 公海客户</a></li>
                 </ul>
             </li>
             <!-- 工作记录 -->

@@ -1,3 +1,5 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html>
@@ -38,8 +40,8 @@
                     <div class="box-tools">
                         <a href="/customer/my"><button class="btn btn-primary btn-sm"><i class="fa fa-arrow-left"></i>返回列表 </button></a>
                         <a href="/customer/${customer.id}/edit"><button class="btn bg-purple btn-sm" id="editCustomer" rel="${customer.id}"><i class="fa fa-pencil"></i> 编辑</button></a>
-                        <a href=""><button class="btn bg-orange btn-sm"><i class="fa fa-exchange"></i> 转交他人</button> </a>
-                        <a href=""><button class="btn bg-maroon btn-sm"><i class="fa fa-recycle"></i> 放入公海</button> </a>
+                        <button class="btn bg-orange btn-sm" id="transferCustomer"><i class="fa fa-exchange"></i> 转交他人</button>
+                        <button id="publicBtn" class="btn bg-maroon btn-sm"><i class="fa fa-recycle"></i> 放入公海</button>
                         <a href="javascript:;" id="delCustomer" rel="${customer.id}"><button class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i> 删除</button> </a>
                     </div>
                 </div>
@@ -61,19 +63,23 @@
                             <td class="td_title">级别</td>
                             <td>${customer.level}</td>
                         </tr>
-                        <tr>
-                            <td class="td_title">地址</td>
-                            <td colspan="5">${customer.address}</td>
-                        </tr>
-                        <tr>
-                            <td class="td_title">备注</td>
-                            <td colspan="5">${customer.mark}</td>
-                        </tr>
+                        <c:if test="${not empty customer.address}">
+                            <tr>
+                                <td class="td_title">地址</td>
+                                <td colspan="5">${customer.address}</td>
+                            </tr>
+                        </c:if>
+                        <c:if test="${not empty customer.mark}">
+                            <tr>
+                                <td class="td_title">备注</td>
+                                <td colspan="5">${customer.mark}</td>
+                            </tr>
+                        </c:if>
                     </table>
                 </div>
                 <div class="box-footer">
-                    <span style="color: #ccc" class="pull-right">创建日期：${customer.createTime} &nbsp;&nbsp;&nbsp;&nbsp;
-                        最后修改日期：${customer.updateTime}</span>
+                    <span style="color: #ccc" class="pull-right">创建日期：<span title="<fmt:formatDate value="${customer.createTime}"/>"><fmt:formatDate value="${customer.createTime}" pattern="MM月dd日"/></span> &nbsp;&nbsp;&nbsp;&nbsp;
+                        最后修改日期：<span title="<fmt:formatDate value="${customer.updateTime}"/>"><fmt:formatDate value="${customer.updateTime}"/></span>
                 </div>
             </div>
 
@@ -186,7 +192,30 @@
         </div>
         &lt;%&ndash;编辑客户模态框结束&ndash;%&gt;
     </div>--%>
-
+    <%--用户选择对话框（转交他人）--%>
+    <div class="modal fade" id="chooseUserModel">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">请选择转入账号</h4>
+                </div>
+                <div class="modal-body">
+                    <select id="userSelect" class="form-control">
+                        <c:forEach items="${accountList}" var="account">
+                            <c:if test="${account.id != customer.accountId}">
+                                <option value="${account.id}">${account.userName} (${account.mobile})</option>
+                            </c:if>
+                        </c:forEach>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="saveTranBtn">确定</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 
 </div>
 <!-- ./wrapper -->
@@ -194,9 +223,12 @@
     <!-- 底部 -->
     <%@include file="../include/footer.jsp"%>
 <%@include file="../include/js.jsp"%>
+<script src="/static/plugins/layer/layer.js"></script>
 <script>
     $(function () {
 
+        var customerId = ${customer.id};
+        //alert(accountId);
         $("#delCustomer").click(function(){
             var id = $(this).attr("rel");
             if(confirm("你确定要删除吗")) {
@@ -204,15 +236,39 @@
             }
         });
 
-       /* //编辑客户
-        $("#editCustomer").click(function(){
-            $("#editCustomerModel").modal({
-                show: true,
-                //鼠标点击桌面模态框不会消失
-
-                backdrop: 'static'
+        //放入公海
+        $("#publicBtn").click(function () {
+            layer.confirm("您确定要将客户放入公海吗",function(index){
+                layer.close(index);
+                window.location.href = "/customer/my/" + customerId + "/public";
             })
-        });*/
+        });
+        //转交他人
+        $("#transferCustomer").click(function () {
+            $("#chooseUserModel").modal({
+                show:true,
+                backdrop:'static'
+            });
+        });
+
+        $("#saveTranBtn").click(function () {
+            var toAccountId = $("#userSelect").val();
+            var toAccountName = $("#userSelect option:selected").text();
+            layer.confirm("您确定要将客户转交给"+toAccountName+"吗",function (index) {
+                layer.close(index);
+                window.location.href = "/customer/my/"+customerId+"/transfer/"+toAccountId;
+            });
+        });
+
+        /* //编辑客户
+         $("#editCustomer").click(function(){
+             $("#editCustomerModel").modal({
+                 show: true,
+                 //鼠标点击桌面模态框不会消失
+
+                 backdrop: 'static'
+             })
+         });*/
 
         //验证编辑的表单
         /*$("#editCustomerFormBtn").click(function () {

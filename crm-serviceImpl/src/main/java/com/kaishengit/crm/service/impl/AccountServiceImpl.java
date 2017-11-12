@@ -14,10 +14,12 @@ import com.kaishengit.crm.mapper.AccountDeptMapper;
 import com.kaishengit.crm.mapper.AccountMapper;
 import com.kaishengit.crm.mapper.DeptMapper;
 import com.kaishengit.crm.service.AccountService;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,6 +50,9 @@ public class AccountServiceImpl implements AccountService{
     @Autowired
     private AccountDeptMapper accountDeptMapper;
 
+    @Value("#{'${user.password.salt}'}")
+    private String salt;
+
     /**
      * @param mobile
      * @param password
@@ -63,7 +68,8 @@ public class AccountServiceImpl implements AccountService{
         if(accounts != null && !accounts.isEmpty()) {
             account = accounts.get(0);
         }
-        if(account != null && password.equals(account.getPassword())) {
+        String encodePassword = DigestUtils.md5Hex(salt + password);
+        if(account != null && encodePassword.equals(account.getPassword())) {
             logger.info("{}在{}登录成功",account.getUserName(),new Date());
             return account;
         } else {
@@ -176,7 +182,7 @@ public class AccountServiceImpl implements AccountService{
     @Override
     @Transactional
     public void saveNewEmployee(String userName, String mobile, String password, Integer[] deptIds) {
-        //TODO mdd5 登录密码
+
         //1.验证手机号是否被使用
         AccountExample accountExample = new AccountExample();
         accountExample.createCriteria().andMobileEqualTo(mobile);
@@ -212,6 +218,31 @@ public class AccountServiceImpl implements AccountService{
     @Override
     public List<Account> findAllAccount() {
         return accountMapper.selectByExample(new AccountExample());
+    }
+
+    /**
+     * 更改密码
+     * @param newPassword
+     * @param confirmPassword
+     */
+    @Override
+    public void changePassword(Account account, String password,String newPassword, String confirmPassword) {
+        String oldpwd = account.getPassword();
+        String MDoldpwd = DigestUtils.md5Hex(salt + password);
+        if(MDoldpwd.equals(oldpwd)){ //输入的旧密码与原密码一致
+            if(newPassword.equals(confirmPassword)){//判断输入的两个新密码是否一致
+                if(!(DigestUtils.md5Hex(salt + newPassword).equals(oldpwd))){//如果新密码与原密码不同，执行更新密码操作
+                    account.setPassword(DigestUtils.md5Hex(salt + newPassword));
+                    accountMapper.updateByPrimaryKey(account);
+                }else if(DigestUtils.md5Hex(salt + newPassword).equals(oldpwd)){
+                    throw new ServiceException("密码没有改动");
+                }
+            }else{//抛出异常
+                throw new ServiceException("抱歉，密码输入不一致");
+            }
+        }else{//抛出异常
+            throw new ServiceException("旧密码输入错误");
+        }
     }
 
 

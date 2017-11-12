@@ -116,6 +116,13 @@ public class CustomerController extends BaseController{
         return customer;
     }
 
+    /**
+     * 编辑客户信息
+     * @param id
+     * @param session
+     * @param model
+     * @return
+     */
     @GetMapping("/{id:\\d+}/edit")
     public String editProduct(@PathVariable Integer id,
                               HttpSession session,
@@ -134,6 +141,13 @@ public class CustomerController extends BaseController{
         return "redirect:/customer/"+customer.getId();
     }
 
+    /**
+     * 删除客户
+     * @param id
+     * @param session
+     * @param model
+     * @return
+     */
     @GetMapping("/{id:\\d+}/delete")
     public String delCustomer(@PathVariable Integer id,
                               HttpSession session,
@@ -196,6 +210,9 @@ public class CustomerController extends BaseController{
         customerService.exportCsvFileToOutputStream(outputStream,account);
     }
 
+    /**
+     * 将数据导出为xls文件
+     */
     @GetMapping("/my/export.xls")
     public void exportXlsData(HttpServletResponse response,
                               HttpSession session) throws IOException {

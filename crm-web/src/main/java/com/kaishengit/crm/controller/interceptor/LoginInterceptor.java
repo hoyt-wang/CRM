@@ -30,10 +30,19 @@ public class LoginInterceptor extends HandlerInterceptorAdapter{
         //判断用户是否登录
         HttpSession session = request.getSession();
         Account account = (Account) session.getAttribute("curr_account");
-        if(account != null) {
+        if(account == null) {
+            String id = request.getParameter("id");
+            if(id == null) {
+                response.sendRedirect("/?callback=" + url);
+            } else {
+                response.sendRedirect("/?callback=" + url +"?id=" + id);
+            }
+            return false;
+            //response.sendRedirect("/");
+            /*response.sendRedirect("/?callback=" + url);
+            return false;*/
+        } else {
             return true;
         }
-        response.sendRedirect("/");
-        return false;
     }
 }

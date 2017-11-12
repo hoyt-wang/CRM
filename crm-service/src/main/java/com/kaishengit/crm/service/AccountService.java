@@ -69,4 +69,11 @@ public interface AccountService {
      * @return
      */
     List<Account> findAllAccount();
+
+    /**
+     * 更改密码
+     * @param newPassword
+     * @param confirmPassword
+     */
+    void changePassword(Account account,String password, String newPassword, String confirmPassword);
 }

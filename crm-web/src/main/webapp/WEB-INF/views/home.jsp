@@ -22,6 +22,9 @@
 
     <!-- 右侧内容部分 -->
     <div class="content-wrapper">
+        <c:if test="${not empty message}">
+            ${message}
+        </c:if>
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>

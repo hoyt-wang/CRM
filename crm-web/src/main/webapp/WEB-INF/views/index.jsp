@@ -31,6 +31,14 @@
     </div>
     <!-- /.login-logo -->
     <div class="login-box-body">
+
+        <c:if test="${not empty param.callback} }">
+            <div class="alert alert-danger">
+                登录信息已过期，请重新登录
+                <button class="close" data-dismiss = "alert"><span>&times</span></button>
+            </div>
+        </c:if>
+
         <c:if test="${not empty message}">
             <p class="login-box-msg">${message}</p>
         </c:if>
@@ -39,6 +47,7 @@
             <div class="form-group has-feedback">
                 <input type="tel" class="form-control" name="mobile" placeholder="手机号码" value="151">
                 <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                <input type="hidden"  name="callback" value="${param.callback}"/>
             </div>
             <div class="form-group has-feedback">
                 <input type="password" name="password" class="form-control" placeholder="密码" value="000000">
@@ -71,5 +80,11 @@
 <script src="/static/plugins/jQuery/jquery-2.2.3.min.js"></script>
 <!-- Bootstrap 3.3.6 -->
 <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+<script>
+    $(function () {
+        /*var call = ${param.callback};
+        alert(call);*/
+    });
+</script>
 </body>
 </html>

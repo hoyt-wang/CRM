@@ -4,6 +4,8 @@ import com.github.pagehelper.PageInfo;
 import com.kaishengit.crm.entity.Account;
 import com.kaishengit.crm.exception.AuthenticationException;
 import com.kaishengit.crm.service.AccountService;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,19 +25,37 @@ public class HomeController {
     @Autowired
    private AccountService accountService;
 
+    /**
+     * 登录页
+     * @return
+     */
     @GetMapping("/")
     public String login() {
         return "index";
     }
 
+    /**
+     * 登录验证
+     * @param mobile
+     * @param password
+     * @param redirectAttributes
+     * @param session
+     * @return
+     */
     @PostMapping("/")
     public String login(String mobile, String password,
+                        @RequestParam(value = "callback",required = false) String callback,
                         RedirectAttributes redirectAttributes,
                         HttpSession session) {
         try {
             Account account =accountService.login(mobile,password);
             session.setAttribute("curr_account",account);
-            return "redirect:home";
+            //TODO callback有问题，需修改
+            if(StringUtils.isNotEmpty(callback)) {
+                return "redirect:callback";
+            } else {
+                return "home";
+            }
         } catch (AuthenticationException e) {
             redirectAttributes.addFlashAttribute("message",e.getMessage());
             return "/";
@@ -65,6 +85,33 @@ public class HomeController {
 
     }
 
+    /**
+     * 更改密码
+     * @param session
+     * @return
+     */
+    @GetMapping("/changePassword")
+    public String changePassword(HttpSession session,Model model) {
+        Account account = (Account) session.getAttribute("curr_account");
+        model.addAttribute("account",account);
+        return "changePassword";
+    }
+
+    @PostMapping("/changePassword")
+    public String changePassword(HttpSession session, String newPassword, String confirmPassword,
+                                 String password,RedirectAttributes redirectAttributes,Model model) {
+        Account account = (Account) session.getAttribute("curr_account");
+        try {
+            accountService.changePassword(account,password,newPassword,confirmPassword);
+            redirectAttributes.addFlashAttribute("message","修改密码成功");
+            return "/home";
+        } catch (Exception e) {
+            e.printStackTrace();
+            model.addAttribute("message",e.getMessage());
+            return "changePassword";
+        }
+
+    }
 
 
 }

@@ -27,13 +27,7 @@
         .table>tbody>tr>td {
             vertical-align: middle;
         }
-        .star {
-            font-size: 20px;
-            color: #ff7400;
-        }
-        .pink {
-            background-color: #EEA2AD;
-        }
+
     </style>
 
 </head>
@@ -48,72 +42,83 @@
 
     <!-- 左侧菜单栏 -->
     <jsp:include page="../include/sider.jsp">
-        <jsp:param name="menu" value="customer_my"/>
+        <jsp:param name="menu" value="record_my"/>
     </jsp:include>
     <!-- =============================================== -->
 
     <!-- 右侧内容部分 -->
     <div class="content-wrapper">
+
         <!-- Main content -->
         <section class="content">
 
             <!-- Default box -->
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">我的客户</h3>
+                    <h3 class="box-title">我的工作记录</h3>
+
                     <div class="box-tools pull-right">
-                        <a href="/customer/new"><button class="btn btn-success btn-sm"><i class="fa fa-plus"></i> 新增客户</button></a>
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fa fa-file-excel-o"></i> 导出Excel <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a href="/customer/my/export.xls">导出为xls文件</a></li>
-                                <li><a href="/customer/my/export.csv">导出为csv文件</a></li>
-                            </ul>
-                        </div>
+                        <button type="button btn-primary" class="btn btn-box-tool">
+                            <a href="/record/new"><i class="fa fa-plus"></i> 添加记录</a>
+                        </button>
                     </div>
                 </div>
-                <div class="box-body no-padding">
-                    <table class="table table-hover">
-                        <tbody>
+                <div class="box-body">
+                    <table class="table">
+                        <thead>
                         <tr>
-                            <th width="80"></th>
-                            <th>姓名</th>
-                            <th>职位</th>
-                            <th>跟进时间</th>
-                            <th>级别</th>
-                            <th>联系方式</th>
+                            <td>机会名称</td>
+                            <td>关联客户</td>
+                            <td>机会价值</td>
+                            <td>当前进度</td>
+                            <td>最后跟进时间</td>
+
                         </tr>
-                        <c:if test="${empty pageInfo.list}">
-                            <tr>
-                                <td colspan="6">您还没有客户，可以<a href="/customer/new">新增客户</a></td>
-                            </tr>
-                        </c:if>
-                        <c:forEach items="${pageInfo.list}" var="customer">
-                            <tr class="dataRow" rel="${customer.id}">
-                                <td><span class="name-avatar ${customer.sex == '女士' ? 'pink' : ''}">${fn:substring(customer.custName, 0, 1)}</span></td>
-                                <td>${customer.custName}</td>
-                                <td>${customer.jobTitle}</td>
-                                <td><fmt:formatDate value="${customer.lastContractTime}"/></td>
-                                <td class="star">${customer.level}</td>
-                                <td><i class="fa fa-phone"></i> ${customer.mobile} <br></td>
-                            </tr>
-                        </c:forEach>
+                        </thead>
+                        <tbody>
+                           <c:forEach items="${pageInfo.list}" var="saleChance">
+                               <tr class="dataRow" rel="${saleChance.id}">
+                                   <td>${saleChance.name}</td>
+                                   <td>${saleChance.customer.custName}</td>
+                                   <td><fmt:formatNumber value="${saleChance.worth}"/> </td>
+                                   <td>
+                                       <c:choose>
+                                           <c:when test="${saleChance.progress == '成交'}">
+                                               <span class="label label-success">${saleChance.progress}</span>
+                                           </c:when>
+                                           <c:when test="${saleChance.progress == '暂时搁置'}">
+                                               <span class="label label-danger">${saleChance.progress}</span>
+                                           </c:when>
+                                           <c:otherwise>
+                                               ${saleChance.progress}
+                                           </c:otherwise>
+                                       </c:choose>
+                                   </td>
+                                   <td><fmt:formatDate value="${saleChance.lastTime}"/></td>
+
+                               </tr>
+                           </c:forEach>
                         </tbody>
                     </table>
                 </div>
                 <!-- /.box-body -->
             </div>
             <!-- /.box -->
+
         </section>
         <!-- /.content -->
-        <ul id="pagination-demo" class="pagination-sm"></ul>
+        <%--页码小于1页不显示--%>
+        <c:if test="${pageInfo.pages > 1}">
+            <div class="box-footer">
+                <ul id="pagination-demo" class="pagination-sm"></ul>
+            </div>
+        </c:if>
     </div>
     <!-- /.content-wrapper -->
 
     <!-- 底部 -->
     <%@include file="../include/footer.jsp"%>
+
 </div>
 <!-- ./wrapper -->
 
@@ -133,7 +138,7 @@
         });
         $(".dataRow").click(function () {
             var id = $(this).attr("rel");
-            window.location.href = "/customer/my/"+id;
+            window.location.href = "/record/my/"+id;
         });
     });
 </script>

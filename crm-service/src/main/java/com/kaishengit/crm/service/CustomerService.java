@@ -89,4 +89,11 @@ public interface CustomerService {
      * @param account
      */
     void exportXlsFileToOutputStream(OutputStream outputStream, Account account) throws IOException;
+
+    /**
+     * 根据当前登录账号id获得该账号客户列表
+     * @param account
+     * @return
+     */
+    List<Customer> findCustomerByAccountId(Account account);
 }

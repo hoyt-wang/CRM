@@ -235,10 +235,19 @@ public class CustomerServiceImpl implements CustomerService {
         outputStream.close();
     }
 
-    private List<Customer> findCustomerByAccountId(Account account) {
+    /**
+     * 根据当前登录账号id获得该账号客户列表
+     *
+     * @param account
+     * @return
+     */
+    @Override
+    public List<Customer> findCustomerByAccountId(Account account) {
         CustomerExample customerExample = new CustomerExample();
         customerExample.createCriteria().andAccountIdEqualTo(account.getId());
         List<Customer> customerList = customerMapper.selectByExample(customerExample);
         return  customerList;
     }
+
+
 }

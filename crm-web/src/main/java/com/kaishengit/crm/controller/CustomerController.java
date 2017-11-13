@@ -5,10 +5,12 @@ import com.kaishengit.crm.controller.exception.ForbideenException;
 import com.kaishengit.crm.controller.exception.NotFoundException;
 import com.kaishengit.crm.entity.Account;
 import com.kaishengit.crm.entity.Customer;
+import com.kaishengit.crm.entity.SaleChance;
 import com.kaishengit.crm.example.CustomerExample;
 import com.kaishengit.crm.exception.ServiceException;
 import com.kaishengit.crm.service.AccountService;
 import com.kaishengit.crm.service.CustomerService;
+import com.kaishengit.crm.service.SaleChanceService;
 import com.kaishengit.web.result.AjaxResult;
 import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +38,9 @@ public class CustomerController extends BaseController{
 
     @Autowired
     private AccountService accountService;
+
+    @Autowired
+    private SaleChanceService saleChanceService;
 
     /**
      * 客户列表
@@ -90,6 +95,7 @@ public class CustomerController extends BaseController{
     //@RequestMapping(value = "/{id\\d+}", method = RequestMethod.GET)
     public String showCustomer(@PathVariable Integer id, Model model,HttpSession session) {
         Customer customer = validateCustomer(id, session);
+        model.addAttribute("saleChanceList",saleChanceService.findSalesChanceByCustId(id));
         model.addAttribute("accountList",accountService.findAllAccount());
         model.addAttribute("customer",customer);
         return "customer/show";
@@ -102,7 +108,7 @@ public class CustomerController extends BaseController{
      * @return
      */
     private Customer validateCustomer(@PathVariable Integer id, HttpSession session) {
-        //根据ID查找客户//根据ID查找客户
+        //根据ID查找客户
         Customer customer = customerService.findById(id);
         if(customer == null) {
             //404

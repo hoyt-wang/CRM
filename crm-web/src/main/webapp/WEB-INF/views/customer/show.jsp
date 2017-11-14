@@ -106,7 +106,13 @@
                             <h3 class="box-title">日程安排</h3>
                         </div>
                         <div class="box-body">
-
+                            <ul class="list-group">
+                                <c:forEach items="${taskList}" var="task">
+                                    <li class="list-group-item">
+                                        <a href="/task/list" target="_blank">${task.title}</a>
+                                    </li>
+                                </c:forEach>
+                            </ul>
                         </div>
                     </div>
                     <div class="box">

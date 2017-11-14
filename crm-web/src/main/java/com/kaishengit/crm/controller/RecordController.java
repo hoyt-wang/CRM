@@ -8,6 +8,7 @@ import com.kaishengit.crm.entity.SaleChance;
 import com.kaishengit.crm.entity.SaleChanceRecord;
 import com.kaishengit.crm.service.CustomerService;
 import com.kaishengit.crm.service.SaleChanceService;
+import com.kaishengit.crm.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,6 +30,9 @@ public class RecordController extends BaseController{
 
     @Autowired
     private CustomerService customerService;
+
+    @Autowired
+    private TaskService taskService;
 
     /**
      * 我的记录
@@ -76,6 +80,7 @@ public class RecordController extends BaseController{
     public String showRecord(@PathVariable Integer id,Model model,HttpSession session) {
         SaleChance saleChance = validateSaleChance(id,session);
         Account account = getCurrAccount(session);
+        model.addAttribute("taskList",taskService.findTaskBySaleId(id));
         model.addAttribute("recordList",saleChanceService.findSalesChanceRecodeListBySalesId(id));
         model.addAttribute("saleChance",saleChance);
         model.addAttribute("progressList",saleChanceService.findAllProgress());

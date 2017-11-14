@@ -11,6 +11,7 @@ import com.kaishengit.crm.exception.ServiceException;
 import com.kaishengit.crm.service.AccountService;
 import com.kaishengit.crm.service.CustomerService;
 import com.kaishengit.crm.service.SaleChanceService;
+import com.kaishengit.crm.service.TaskService;
 import com.kaishengit.web.result.AjaxResult;
 import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,9 @@ public class CustomerController extends BaseController{
 
     @Autowired
     private SaleChanceService saleChanceService;
+
+    @Autowired
+    private TaskService taskService;
 
     /**
      * 客户列表
@@ -95,6 +99,7 @@ public class CustomerController extends BaseController{
     //@RequestMapping(value = "/{id\\d+}", method = RequestMethod.GET)
     public String showCustomer(@PathVariable Integer id, Model model,HttpSession session) {
         Customer customer = validateCustomer(id, session);
+        model.addAttribute("taskList",taskService.findTaskByCustId(id));
         model.addAttribute("saleChanceList",saleChanceService.findSalesChanceByCustId(id));
         model.addAttribute("accountList",accountService.findAllAccount());
         model.addAttribute("customer",customer);

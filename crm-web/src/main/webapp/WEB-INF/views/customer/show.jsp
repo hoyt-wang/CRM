@@ -103,13 +103,22 @@
                 <div class="col-md-4">
                     <div class="box">
                         <div class="box-header with-border">
-                            <h3 class="box-title">日程安排</h3>
+                            <h3 class="box-title">待办事项</h3>
+                            <div class="box-tools">
+                                <button class="btn btn-sm btn-default" id="showAddTaskModal"><i class="fa fa-plus"></i></button>
+                            </div>
                         </div>
                         <div class="box-body">
                             <ul class="list-group">
                                 <c:forEach items="${taskList}" var="task">
-                                    <li class="list-group-item">
-                                        <a href="/task/list" target="_blank">${task.title}</a>
+                                    <li class="${task.done == 1? 'done' : ''}">
+                                        <input type="checkbox">
+                                        <span class="text">${task.title}</span>
+                                        <small class="label label-danger"><i class="fa fa-clock-o"></i> ${task.finishTime}</small>
+                                        <%--<div class="tools">
+                                            <i class="fa fa-edit"></i>
+                                            <i class="fa fa-trash-o"></i>
+                                        </div>--%>
                                     </li>
                                 </c:forEach>
                             </ul>
@@ -229,6 +238,40 @@
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
 
+    <%--添加新任务Modal--%>
+    <div class="modal fade" id="taskModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">新增待办事项</h4>
+            </div>
+            <div class="modal-body">
+                <form action="/customer/my/${customer.id}/task/new" method="post" id="saveTaskForm">
+                    <input type="hidden" name="accountId" value="${sessionScope.curr_account.id}">
+                    <input type="hidden" name="custId" value="${customer.id}">
+                    <div class="form-group">
+                        <label>任务名称</label>
+                        <input type="text" class="form-control" name="title">
+                    </div>
+                    <div class="form-group">
+                        <label>完成日期</label>
+                        <input type="text" class="form-control" id="datepicker" name="finishTime">
+                    </div>
+                    <div class="form-group">
+                        <label>提醒时间</label>
+                        <input type="text" class="form-control" id="datepicker2" name="remindTime">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="saveTaskBtn">保存</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
 </div>
 <!-- ./wrapper -->
 
@@ -270,6 +313,37 @@
                 layer.close(index);
                 window.location.href = "/customer/my/"+customerId+"/transfer/"+toAccountId;
             });
+        });
+
+        //添加新任务
+        $("#showAddTaskModal").click(function () {
+            $("#taskModal").modal({
+                show:true,
+                backdrop:'static'
+            });
+        });
+        $("#saveTaskBtn").click(function () {
+            $("#saveTaskForm").submit();
+        });
+        $("#saveTaskForm").validate({
+            errorClass:"text-danger",
+            errorElement:"span",
+            rules:{
+                title:{
+                    required:true
+                },
+                finishTime:{
+                    required:true
+                }
+            },
+            messages:{
+                title:{
+                    required:"请输入任务内容"
+                },
+                finishTime:{
+                    required:"请选择完成时间"
+                }
+            }
         });
 
         /* //编辑客户

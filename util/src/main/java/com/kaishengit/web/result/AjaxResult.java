@@ -15,6 +15,13 @@ public class AjaxResult {
         ajaxResult.setState(STATE_SUCCESS);
         return ajaxResult;
     }
+
+    /*public static AjaxResult success(Object data) {
+        AjaxResult ajaxResult = new AjaxResult();
+        ajaxResult.setState(AjaxResult.STATE_SUCCESS);
+        ajaxResult.setData(data);
+        return ajaxResult;
+    }*/
     public static AjaxResult successWithData(Object data) {
         AjaxResult ajaxResult = new AjaxResult();
         ajaxResult.setState(STATE_SUCCESS);

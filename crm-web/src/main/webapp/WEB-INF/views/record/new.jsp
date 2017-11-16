@@ -80,8 +80,8 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label>机会价值(元)</label>
-                            <input type="text" name="worth" class="form-control">
+                            <label id="content"></label>
+                            <input type="text" name="worth" id="worth" class="form-control">
                         </div>
 
                         <div class="form-group">
@@ -152,6 +152,21 @@
                     number:"请输入有效的价值",
                     min:"请输入有效的价值"
                 }
+            }
+        });
+
+        $("#worth").keyup(function () {
+            var temp = $("#worth").val();
+            if(temp.length < 14){
+                var unit = "千百拾亿千百拾万千百拾元", str = "";
+                unit = unit.substr(unit.length - temp.length);
+                for (var i=0; i < temp.length; i++){
+                    str += '零壹贰叁肆伍陆柒捌玖'.charAt(temp.charAt(i)) + unit.charAt(i);
+                    $("#content").html("机会价值("+str+")");
+                }
+            } else {
+                layer.message("数字太大");
+                $("#content").html("机会价值(元)");
             }
         });
 

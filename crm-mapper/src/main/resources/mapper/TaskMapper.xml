@@ -180,7 +180,42 @@
       <include refid="Example_Where_Clause" />
     </if>
   </select>
-  <update id="updateByExampleSelective" parameterType="map">
+    <select id="findByAccountId" resultType="com.kaishengit.crm.entity.Task">
+      SELECT
+        task.*, cust.cust_name,
+        cust.job_title,
+        cust.mobile,
+        cust.address,
+        cust.trade,
+        cust.source,
+        cust.`level`,
+        cust.mark,
+        cust.account_id AS cust_account_id,
+        cust.last_contract_time,
+        cust.create_time AS cust_create_time,
+        cust.update_time,
+        cust.reminder,
+        cust.sex,
+        sale.`name`,
+        sale.cust_id AS sale_cust_id,
+        sale.worth,
+        sale.progress,
+        sale.content,
+        sale.create_time AS sale_create_time,
+        sale.last_time,
+        sale.account_id AS sale_account_id
+      FROM
+        task
+      LEFT JOIN customer AS cust ON task.cust_id = cust.id
+      LEFT JOIN sale_chance AS sale ON task.sale_id = sale.id
+      WHERE
+        task.account_id = #{accountId}
+        <if test="not showAll">
+          and task.done = 0
+        </if>
+      order by task.finish_time asc
+    </select>
+    <update id="updateByExampleSelective" parameterType="map">
     update task
     <set>
       <if test="record.id != null">

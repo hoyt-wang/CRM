@@ -6,6 +6,7 @@ import com.kaishengit.crm.controller.exception.NotFoundException;
 import com.kaishengit.crm.entity.Account;
 import com.kaishengit.crm.entity.Customer;
 import com.kaishengit.crm.entity.SaleChance;
+import com.kaishengit.crm.entity.Task;
 import com.kaishengit.crm.example.CustomerExample;
 import com.kaishengit.crm.exception.ServiceException;
 import com.kaishengit.crm.service.AccountService;
@@ -236,6 +237,15 @@ public class CustomerController extends BaseController{
 
         OutputStream outputStream = response.getOutputStream();
         customerService.exportXlsFileToOutputStream(outputStream,account);
+    }
+
+    /**
+     * 给客户添加待办事项
+     */
+    @PostMapping("/my/{customerId:\\d+}/task/new")
+    public String newTaskToCustomer(Task task) {
+        taskService.saveNewTask(task);
+        return "redirect:/customer/my/"+task.getCustId();
     }
 
 /*    *//**

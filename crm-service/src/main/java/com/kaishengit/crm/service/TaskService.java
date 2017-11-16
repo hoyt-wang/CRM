@@ -22,10 +22,9 @@ public interface TaskService {
     /**
      * 获得待办事项列表
      * @param pageNo
-     * @param account
      * @return
      */
-    PageInfo<Task> pageForTask(Integer pageNo, Account account);
+    PageInfo<Task> pageForTask(Integer pageNo, Integer accountId,boolean showAll);
 
     /**
      * 根据客户id获得事项列表
@@ -52,4 +51,22 @@ public interface TaskService {
      * 根据id删除待办事项
      */
     void delTaskById(Integer id);
+
+    /**
+     * 更新状态为1完成
+     * @param id
+     */
+    void updateStateDone(Integer id);
+
+    /**
+     * 更新状态为0未完成
+     * @param id
+     */
+    void updateStateUndone(Integer id);
+
+    /**
+     * 更改待办事项状态状态
+     * @param task
+     */
+    void updateTask(Task task);
 }

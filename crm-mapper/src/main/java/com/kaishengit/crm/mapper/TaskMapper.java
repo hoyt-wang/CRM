@@ -28,4 +28,7 @@ public interface TaskMapper {
     int updateByPrimaryKeySelective(Task record);
 
     int updateByPrimaryKey(Task record);
+
+    List<Task> findByAccountId(@Param("accountId") Integer accountId, @Param("showAll") boolean showAll);
+
 }

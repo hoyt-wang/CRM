@@ -34,6 +34,26 @@ public class Task implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    private Customer customer;
+
+    private SaleChance saleChance;
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public SaleChance getSaleChance() {
+        return saleChance;
+    }
+
+    public void setSaleChance(SaleChance saleChance) {
+        this.saleChance = saleChance;
+    }
+
     public Integer getId() {
         return id;
     }

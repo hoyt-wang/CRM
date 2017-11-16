@@ -56,11 +56,12 @@ public class TaskServiceImpl implements TaskService {
      * @return
      */
     @Override
-    public PageInfo<Task> pageForTask(Integer pageNo, Account account) {
+    public PageInfo<Task> pageForTask(Integer pageNo, Integer accountId,boolean showAll) {
         PageHelper.startPage(pageNo,15);
-        TaskExample taskExample = new TaskExample();
+        List<Task> list = taskMapper.findByAccountId(accountId,showAll);
+       /* TaskExample taskExample = new TaskExample();
         taskExample.createCriteria().andAccountIdEqualTo(account.getId());
-        List<Task> list = taskMapper.selectByExample(taskExample);
+        List<Task> list = taskMapper.selectByExample(taskExample);*/
         return new PageInfo<>(list);
     }
 
@@ -167,5 +168,38 @@ public class TaskServiceImpl implements TaskService {
             }
         }
     }
+
+    /**
+     * 更新状态为1完成
+     * @param id
+     */
+    @Override
+    public void updateStateDone(Integer id) {
+        Task task = taskMapper.selectByPrimaryKey(id);
+        task.setDone((byte)1);
+        taskMapper.updateByPrimaryKeySelective(task);
+    }
+
+    /**
+     * 更新状态为0未完成
+     * @param id
+     */
+    @Override
+    public void updateStateUndone(Integer id) {
+        Task task = taskMapper.selectByPrimaryKey(id);
+        task.setDone((byte)0);
+        taskMapper.updateByPrimaryKeySelective(task);
+    }
+
+    /**
+     * 更改待办事项状态状态
+     *
+     * @param task
+     */
+    @Override
+    public void updateTask(Task task) {
+        taskMapper.updateByPrimaryKey(task);
+    }
+
 
 }

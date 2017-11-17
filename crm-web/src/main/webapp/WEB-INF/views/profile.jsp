@@ -33,23 +33,24 @@
 
                 </div>
                 <div class="box-body">
-                    <form action="" method="post" id="changeForm">
+                    <form action="" id="settingForm">
                         <div class="form-group">
                             <label>原始密码</label>
-                            <input type="password" class="form-control" name="password" value="${account.password}">
+                            <input type="password" class="form-control" name="password" >
                         </div>
                         <div class="form-group">
                             <label>新密码</label>
-                            <input type="password" class="form-control" name="newPassword">
+                            <input type="password" class="form-control" id="newPassword" name="newPassword">
                         </div>
                         <div class="form-group">
                             <label>确认密码</label>
                             <input type="password" class="form-control" name="confirmPassword">
                         </div>
-                        <div class="box-footer">
-                            <button class="btn btn-primary" id="changeBtn">保存</button>
-                        </div>
+
                     </form>
+                    <div class="box-footer">
+                        <button class="btn btn-primary" id="settingBtn">保存</button>
+                    </div>
                 </div>
 
                 <!-- /.box-body -->
@@ -68,13 +69,54 @@
 
 <%@include file="include/js.jsp"%>
 <script src="/static/plugins/layer/layer.js"></script>
+<script src="/static/plugins/validate/jquery.validate.min.js"></script>
 <script>
     $(function () {
-      /*  $("#changeBtn").click(function(){
-            if(confirm("你确定要修改密码吗")) {
-                window.location.href="/home";
+        $("#settingBtn").click(function () {
+            $("#settingForm").submit();
+        });
+
+        $("#settingForm").validate({
+            errorClass:"text-danger",
+            errorElement:"span",
+            rules:{
+                password:{
+                    required:true
+                },
+                newPassword:{
+                    required:true
+                },
+                confirmPassword:{
+                    required:true,
+                    equalTo:"#newPassword"
+                }
+            },
+            messages:{
+                password:{
+                    required:"请输入原始密码"
+                },
+                newPassword:{
+                    required:"请输入新密码"
+                },
+                confirmPassword:{
+                    required:"请输入确认密码",
+                    equalTo:"两次密码不一致"
+                }
+            },
+            submitHandler:function () {
+                $.post("/profile",$("#settingForm").serialize()).done(function (data) {
+                    if(data.state == "success") {
+                        layer.alert("密码修改成功，请重新登录",function () {
+                            window.location.href = "/";
+                        })
+                    } else {
+                        layer.msg(data.message);
+                    }
+                }).error(function () {
+                    layer.msg("服务器异常");
+                });
             }
-        });*/
+        });
     });
 </script>
 </body>

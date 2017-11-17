@@ -1,11 +1,10 @@
 package com.kaishengit.crm.controller;
 
-import com.github.pagehelper.PageInfo;
 import com.kaishengit.crm.entity.Account;
 import com.kaishengit.crm.exception.AuthenticationException;
 import com.kaishengit.crm.service.AccountService;
+import com.kaishengit.web.result.AjaxResult;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -90,25 +89,25 @@ public class HomeController {
      * @param session
      * @return
      */
-    @GetMapping("/changePassword")
+    @GetMapping("/profile")
     public String changePassword(HttpSession session,Model model) {
         Account account = (Account) session.getAttribute("curr_account");
         model.addAttribute("account",account);
-        return "changePassword";
+        return "profile";
     }
 
-    @PostMapping("/changePassword")
-    public String changePassword(HttpSession session, String newPassword, String confirmPassword,
-                                 String password,RedirectAttributes redirectAttributes,Model model) {
+    @PostMapping("/profile")
+    @ResponseBody
+    public AjaxResult changePassword(HttpSession session, String newPassword, String confirmPassword,
+                                     String password) {
         Account account = (Account) session.getAttribute("curr_account");
         try {
             accountService.changePassword(account,password,newPassword,confirmPassword);
-            redirectAttributes.addFlashAttribute("message","修改密码成功");
-            return "/home";
+            //重新登录
+            session.invalidate();
+            return AjaxResult.success();
         } catch (Exception e) {
-            e.printStackTrace();
-            model.addAttribute("message",e.getMessage());
-            return "changePassword";
+            return AjaxResult.error(e.getMessage());
         }
 
     }

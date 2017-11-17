@@ -19,7 +19,28 @@ public class FastDfsTest {
 
     @Test
     public void uploadFile() throws IOException, MyException {
+
         Properties properties = new Properties();
+        properties.setProperty(ClientGlobal.PROP_KEY_TRACKER_SERVERS,"192.168.106.28:22122");
+        ClientGlobal.initByProperties(properties);
+
+        TrackerClient client = new TrackerClient();
+        TrackerServer trackerServer = client.getConnection();
+
+        StorageClient storageClient = new StorageClient(trackerServer,null);
+
+        InputStream inputStream = new FileInputStream("d:/upload/user.jpg");
+
+        byte[] bytes = IOUtils.toByteArray(inputStream);
+
+        String[] results = storageClient.upload_file(bytes,"jpg",null);
+        for(String result : results) {
+            System.out.println(result);
+        }
+
+        inputStream.close();
+
+    /*    Properties properties = new Properties();
         properties.setProperty(ClientGlobal.PROP_KEY_TRACKER_SERVERS,"192.168.106.28:22122");
         ClientGlobal.initByProperties(properties);
 
@@ -36,12 +57,32 @@ public class FastDfsTest {
             System.out.println(str);
         }
 
-        inputStream.close();;
+        inputStream.close();;*/
     }
 
     @Test
     public void downloadFile() throws IOException, MyException {
+
         Properties properties = new Properties();
+        properties.setProperty(ClientGlobal.PROP_KEY_TRACKER_SERVERS,"192.168.106.28:22122");
+        ClientGlobal.initByProperties(properties);
+
+        TrackerClient trackerClient = new TrackerClient();
+        TrackerServer trackerServer = trackerClient.getConnection();
+
+        StorageClient storageClient = new StorageClient(trackerServer,null);
+
+        byte[] bytes = storageClient.download_file("group1","M00/00/00/wKhqHFoOSByADdIxAAA5hVy4NtI598.jpg");
+        FileOutputStream outputStream = new FileOutputStream("d:/temp/user.jpg");
+
+        outputStream.write(bytes,0,bytes.length);
+        outputStream.flush();
+        outputStream.close();
+
+
+
+
+       /* Properties properties = new Properties();
         properties.setProperty(ClientGlobal.PROP_KEY_TRACKER_SERVERS,"192.168.106.28:22122");
         ClientGlobal.initByProperties(properties);
         TrackerClient trackerClient = new TrackerClient();
@@ -51,6 +92,6 @@ public class FastDfsTest {
         FileOutputStream outputStream = new FileOutputStream("d:/temp/6.txt");
         outputStream.write(bytes,0,bytes.length);
         outputStream.flush();
-        outputStream.close();
+        outputStream.close();*/
     }
 }

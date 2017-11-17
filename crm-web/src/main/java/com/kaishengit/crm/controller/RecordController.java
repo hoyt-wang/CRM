@@ -6,6 +6,7 @@ import com.kaishengit.crm.controller.exception.NotFoundException;
 import com.kaishengit.crm.entity.Account;
 import com.kaishengit.crm.entity.SaleChance;
 import com.kaishengit.crm.entity.SaleChanceRecord;
+import com.kaishengit.crm.entity.Task;
 import com.kaishengit.crm.service.CustomerService;
 import com.kaishengit.crm.service.SaleChanceService;
 import com.kaishengit.crm.service.TaskService;
@@ -101,6 +102,12 @@ public class RecordController extends BaseController{
         return saleChance;
     }
 
+    /**
+     * 更新进度
+     * @param id
+     * @param progress
+     * @return
+     */
     @GetMapping("/my/{id:\\d+}/changeProgress")
     public String changeProgress(@PathVariable Integer id, String progress) {
         System.out.println(progress);
@@ -148,6 +155,16 @@ public class RecordController extends BaseController{
         return "redirect:/record/my";
     }
 
+    /**
+     * 添加待办事项
+     * @param task
+     * @return
+     */
+    @PostMapping("/my/{saleId:\\d+}/task/new")
+    public String newTaskToSaleChance(Task task) {
+        taskService.saveNewTask(task);
+        return "redirect:/record/my/" + task.getSaleId();
+    }
 
     /**
      * 公海记录

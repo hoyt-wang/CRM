@@ -52,7 +52,6 @@ public class TaskServiceImpl implements TaskService {
     /**
      * 获得待办事项列表
      * @param pageNo
-     * @param account
      * @return
      */
     @Override
@@ -86,7 +85,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<Task> findTaskBySaleId(Integer id) {
         TaskExample taskExample = new TaskExample();
-        taskExample.createCriteria().andCustIdEqualTo(id);
+        taskExample.createCriteria().andSaleIdEqualTo(id);
         taskExample.setOrderByClause("finish_time desc");
         return taskMapper.selectByExample(taskExample);
     }

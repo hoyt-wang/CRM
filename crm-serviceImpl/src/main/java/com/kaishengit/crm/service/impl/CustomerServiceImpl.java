@@ -108,7 +108,6 @@ public class CustomerServiceImpl implements CustomerService {
 
     /**
      * 删除客户
-     *
      * @param id
      */
     @Override
@@ -118,7 +117,6 @@ public class CustomerServiceImpl implements CustomerService {
 
     /**
      * 编辑客户
-     *
      * @param customer
      */
     @Override
@@ -170,7 +168,6 @@ public class CustomerServiceImpl implements CustomerService {
 
     /**
      * 导出客户资料文件为csv格式
-     *
      * @param outputStream
      * @param account
      */
@@ -204,7 +201,6 @@ public class CustomerServiceImpl implements CustomerService {
 
     /**
      * 导出客户资料文件为xls格式
-     *
      * @param outputStream
      * @param account
      */
@@ -237,7 +233,6 @@ public class CustomerServiceImpl implements CustomerService {
 
     /**
      * 根据当前登录账号id获得该账号客户列表
-     *
      * @param account
      * @return
      */

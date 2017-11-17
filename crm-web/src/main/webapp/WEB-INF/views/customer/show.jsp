@@ -113,7 +113,7 @@
                                 <c:forEach items="${taskList}" var="task">
                                     <li class="${task.done == 1? 'done' : ''}">
                                         <input type="checkbox">
-                                        <span class="text">${task.title}</span>
+                                        <a href="/task/list"> <span class="text">${task.title}</span></a>
                                         <small class="label label-danger"><i class="fa fa-clock-o"></i> ${task.finishTime}</small>
                                         <%--<div class="tools">
                                             <i class="fa fa-edit"></i>
@@ -279,6 +279,7 @@
     <%@include file="../include/footer.jsp"%>
 <%@include file="../include/js.jsp"%>
 <script src="/static/plugins/layer/layer.js"></script>
+<script src="/static/plugins/validate/jquery.validate.min.js"></script>
 <script>
     $(function () {
 
@@ -315,7 +316,28 @@
             });
         });
 
-        //添加新任务
+        var picker = $('#datepicker').datepicker({
+            format: "yyyy-mm-dd",
+            language: "zh-CN",
+            autoclose: true,
+            todayHighlight: true,
+            startDate:moment().format("yyyy-MM-dd")
+        });
+        picker.on("changeDate",function (e) {
+            var today = moment().format("YYYY-MM-DD");
+            $('#datepicker2').datetimepicker('setStartDate',today);
+            $('#datepicker2').datetimepicker('setEndDate', e.format('yyyy-mm-dd'));
+        });
+
+
+        var timepicker = $('#datepicker2').datetimepicker({
+            format: "yyyy-mm-dd hh:ii",
+            language: "zh-CN",
+            autoclose: true,
+            todayHighlight: true
+        });
+
+        //添加待办事项
         $("#showAddTaskModal").click(function () {
             $("#taskModal").modal({
                 show:true,

@@ -82,8 +82,7 @@
 <script src="/static/bootstrap/js/bootstrap.min.js"></script>
 <script>
     $(function () {
-        /*var call = ${param.callback};
-        alert(call);*/
+
     });
 </script>
 </body>

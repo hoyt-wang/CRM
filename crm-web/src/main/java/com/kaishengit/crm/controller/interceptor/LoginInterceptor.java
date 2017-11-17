@@ -33,7 +33,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter{
         if(account == null) {
             String id = request.getParameter("id");
             if(id == null) {
-                response.sendRedirect("/?callback=" + url);
+                response.sendRedirect("/?  =" + url);
             } else {
                 response.sendRedirect("/?callback=" + url +"?id=" + id);
             }

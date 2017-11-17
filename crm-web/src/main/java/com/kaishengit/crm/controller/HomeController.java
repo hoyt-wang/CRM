@@ -43,7 +43,7 @@ public class HomeController {
      */
     @PostMapping("/")
     public String login(String mobile, String password,
-                        @RequestParam(value = "callback",required = false) String callback,
+                        @RequestParam(required = false ,defaultValue = "") String callback,
                         RedirectAttributes redirectAttributes,
                         HttpSession session) {
         try {
@@ -51,13 +51,13 @@ public class HomeController {
             session.setAttribute("curr_account",account);
             //TODO callback有问题，需修改
             if(StringUtils.isNotEmpty(callback)) {
-                return "redirect:callback";
+                return "redirect:/callback";
             } else {
-                return "home";
+                return "redirect:/home";
             }
         } catch (AuthenticationException e) {
             redirectAttributes.addFlashAttribute("message",e.getMessage());
-            return "/";
+            return "redirect:/";
         }
     }
 

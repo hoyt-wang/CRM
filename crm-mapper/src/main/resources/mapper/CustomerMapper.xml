@@ -230,6 +230,16 @@
   <select id="findByAccountId" resultType="com.kaishengit.crm.entity.Customer">
     SELECT * FROM customer where account_id = #{accountId}
   </select>
+  <select id="countByCreateTime" resultType="java.util.Map">
+      SELECT
+          count(*) AS count,
+          MONTH (create_time) AS month
+      FROM
+          customer
+      GROUP BY
+          month
+  </select>
+
   <update id="updateByExampleSelective" parameterType="map">
     update customer
     <set>

@@ -61,7 +61,7 @@
                 </ul>
             </li>
             <!-- 统计报表 -->
-            <li class="treeview">
+            <li class="treeview ${fn:startsWith(param.menu, 'chart_') ? 'active' : ''}">
                 <a href="#">
                     <i class="fa fa-pie-chart"></i> <span>统计报表</span>
                     <span class="pull-right-container">
@@ -69,8 +69,8 @@
             </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="../../index.html"><i class="fa fa-circle-o"></i> 待办列表</a></li>
-                    <li><a href="../../index2.html"><i class="fa fa-circle-o"></i> 逾期事项</a></li>
+                    <li class="${param.menu == 'chart_customer' ? 'active' : ''}"><a href="/charts/list"><i class="fa fa-circle-o"></i>列表</a></li>
+                    <li class="${param.menu == 'chart_delay' ? 'active' : ''}"><a href="../../index2.html"><i class="fa fa-circle-o"></i> 逾期列表</a></li>
                 </ul>
             </li>
 

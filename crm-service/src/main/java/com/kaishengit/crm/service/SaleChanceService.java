@@ -6,6 +6,7 @@ import com.kaishengit.crm.entity.SaleChance;
 import com.kaishengit.crm.entity.SaleChanceRecord;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by hoyt on 2017/11/13.
@@ -83,4 +84,10 @@ public interface SaleChanceService {
      * @param id
      */
     void deleteSalesChanceById(Integer id);
+
+    /**
+     * 销售进度列表
+     * @return
+     */
+    List<Map<String,Object>> findProgressCount();
 }

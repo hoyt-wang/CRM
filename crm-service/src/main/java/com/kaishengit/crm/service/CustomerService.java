@@ -6,6 +6,7 @@ import com.kaishengit.crm.entity.Customer;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -96,4 +97,10 @@ public interface CustomerService {
      * @return
      */
     List<Customer> findCustomerByAccountId(Account account);
+
+    /**
+     * 每月客户增加数量
+     * @return
+     */
+    List<Map<String,Object>> countByCreateTime();
 }

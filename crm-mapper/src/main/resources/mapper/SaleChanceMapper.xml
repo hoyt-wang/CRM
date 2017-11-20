@@ -239,7 +239,16 @@
     WHERE
     sale_chance.id = #{id}
   </select>
-  <update id="updateByExampleSelective" parameterType="map">
+    <select id="findProgressCount" resultType="java.util.Map">
+      SELECT
+          count(*) AS count,
+          progress
+      FROM
+          sale_chance
+      GROUP BY
+          progress
+    </select>
+    <update id="updateByExampleSelective" parameterType="map">
     update sale_chance
     <set>
       <if test="record.id != null">

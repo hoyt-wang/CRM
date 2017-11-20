@@ -1,7 +1,10 @@
 package com.kaishengit.crm.mapper;
 
 import com.kaishengit.crm.entity.Customer;
+
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import com.kaishengit.crm.example.CustomerExample;
 import org.apache.ibatis.annotations.Param;
@@ -30,4 +33,6 @@ public interface CustomerMapper {
     int updateByPrimaryKey(Customer record);
 
     List<Customer> findByAccountId(@Param("accountId") Integer accountId);
+
+    List<Map<String,Object>> countByCreateTime();
 }

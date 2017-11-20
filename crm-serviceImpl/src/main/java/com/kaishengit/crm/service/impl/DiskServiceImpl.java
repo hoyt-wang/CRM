@@ -3,10 +3,12 @@ package com.kaishengit.crm.service.impl;
 import com.kaishengit.crm.entity.Disk;
 import com.kaishengit.crm.example.DiskExample;
 import com.kaishengit.crm.exception.ServiceException;
+import com.kaishengit.crm.files.FileStore;
 import com.kaishengit.crm.mapper.DiskMapper;
 import com.kaishengit.crm.service.DiskService;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +30,10 @@ public class DiskServiceImpl implements DiskService {
 
     @Value("${file.upload.path}")
     private String uploadPath;
+
+    @Autowired
+    @Qualifier("qiniuFileStore")
+    private FileStore fileStore;
 
     /**
      * 根据Pid查找文件及文件夹
@@ -73,36 +79,31 @@ public class DiskServiceImpl implements DiskService {
         String fileName = disk.getName();
         String saveName = UUID.randomUUID() + fileName.substring(fileName.lastIndexOf("."));
 
-        disk.setSaveName(saveName);
         disk.setUpdateTime(new Date());
         disk.setDownloadCount(0);
         disk.setType(Disk.DISK_FILE_TYPE);
 
-
+        String newFileName = null;
         try {
-            FileOutputStream outputStream = new FileOutputStream(new File(uploadPath,saveName));
-            IOUtils.copy(inputStream,outputStream);
+            newFileName = fileStore.saveFile(inputStream,saveName);
 
-            outputStream.flush();
-            outputStream.close();
-            inputStream.close();
         } catch (IOException e) {
             e.printStackTrace();
             throw new ServiceException("文件上传异常");
         }
-
+        disk.setSaveName(newFileName);
         diskMapper.insertSelective(disk);
 
     }
 
     /**
      * 根据id获得文件输入流
-     *
      * @param id
      * @return
      */
     @Override
     public InputStream donwnloadFile(Integer id) throws IOException,ServiceException {
+
         Disk disk = diskMapper.selectByPrimaryKey(id);
         if(disk == null || disk.getType().equals(Disk.DISK_FOLDER_TYPE)) {
             throw new ServiceException(id+"对应的文件不存在或已被删除");
@@ -112,8 +113,8 @@ public class DiskServiceImpl implements DiskService {
         disk.setDownloadCount(disk.getDownloadCount() +1);
         diskMapper.updateByPrimaryKeySelective(disk);
 
-        FileInputStream inputStream = new FileInputStream(new File(uploadPath,disk.getSaveName()));
-        return inputStream;
+        byte[] bytes = fileStore.getFile(disk.getSaveName());
+        return new ByteArrayInputStream(bytes);
     }
 
 

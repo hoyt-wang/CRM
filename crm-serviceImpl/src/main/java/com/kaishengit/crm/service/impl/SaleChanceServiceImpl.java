@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by hoyt on 2017/11/13.
@@ -223,6 +224,16 @@ public class SaleChanceServiceImpl implements SaleChanceService{
             customer.setLastContractTime(saleChanceList.get(0).getLastTime());
         }
         customerMapper.updateByPrimaryKeySelective(customer);
+    }
+
+    /**
+     * 销售进度列表
+     *
+     * @return
+     */
+    @Override
+    public List<Map<String, Object>> findProgressCount() {
+        return saleChanceMapper.findProgressCount();
     }
 
 

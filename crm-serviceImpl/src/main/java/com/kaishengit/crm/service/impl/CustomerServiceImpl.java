@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpCookie;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -242,6 +243,16 @@ public class CustomerServiceImpl implements CustomerService {
         customerExample.createCriteria().andAccountIdEqualTo(account.getId());
         List<Customer> customerList = customerMapper.selectByExample(customerExample);
         return  customerList;
+    }
+
+    /**
+     * 每月客户增加数量
+     *
+     * @return
+     */
+    @Override
+    public List<Map<String,Object>> countByCreateTime() {
+        return customerMapper.countByCreateTime();
     }
 
 

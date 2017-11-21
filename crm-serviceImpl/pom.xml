@@ -95,6 +95,14 @@
             <artifactId>qiniu-java-sdk</artifactId>
             <version>7.2.0</version>
         </dependency>
+
+        <!--微信-->
+        <dependency>
+            <groupId>com.kaishengit.crm</groupId>
+            <artifactId>weixin</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
     </dependencies>
 
 

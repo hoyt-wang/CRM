@@ -14,6 +14,7 @@ import com.kaishengit.crm.mapper.AccountDeptMapper;
 import com.kaishengit.crm.mapper.AccountMapper;
 import com.kaishengit.crm.mapper.DeptMapper;
 import com.kaishengit.crm.service.AccountService;
+import com.kaishengit.weixin.WeixinUtil;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -23,6 +24,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -50,10 +52,14 @@ public class AccountServiceImpl implements AccountService{
     @Autowired
     private AccountDeptMapper accountDeptMapper;
 
+    @Autowired
+    private WeixinUtil weixinUtil;
+
     @Value("#{'${user.password.salt}'}")
     private String salt;
 
     /**
+     * 用户登录
      * @param mobile
      * @param password
      * @return 登录成功返回Account对象，失败抛出AuthenticationException异常
@@ -109,6 +115,8 @@ public class AccountServiceImpl implements AccountService{
         dept.setDeptName(deptName);
         dept.setpId(COMPANY_ID);
         deptMapper.insertSelective(dept);
+        //发送到微信
+        weixinUtil.createDept(dept.getId(),dept.getpId(),dept.getDeptName());
 
         logger.info("添加新部门 {}",deptName);
     }
@@ -207,7 +215,8 @@ public class AccountServiceImpl implements AccountService{
             accountDeptKey.setDeptId(deptId);
             accountDeptMapper.insert(accountDeptKey);
         }
-
+        //添加账号到微信
+        weixinUtil.createAccount(account.getId(),userName,mobile, Arrays.asList(deptIds));
         logger.info("添加新账号 {}",userName);
     }
 

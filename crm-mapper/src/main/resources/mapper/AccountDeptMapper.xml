@@ -91,7 +91,7 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.kaishengit.crm.entity.AccountDeptKey">
+  <insert id="insert" parameterType="com.kaishengit.crm.entity.AccountDeptKey" useGeneratedKeys="true" keyProperty="id">
     insert into account_dept (account_id, dept_id)
     values (#{accountId,jdbcType=INTEGER}, #{deptId,jdbcType=INTEGER})
   </insert>

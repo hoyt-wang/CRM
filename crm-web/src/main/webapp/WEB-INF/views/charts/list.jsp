@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>凯盛软件CRM-客户当前进度统计</title>
+    <title>凯盛软件CRM-客户相关报表</title>
     <%@ include file="../include/css.jsp" %>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
@@ -18,7 +18,7 @@
         <section class="content">
 
             <div class="box">
-                <div class="box-header with-border">
+                <div class="box-header with-border ">
                     <h3 class="box-title">客户当前进度统计</h3>
                 </div>
                 <div class="box-body">
@@ -58,7 +58,6 @@
 
         option = {
             title: {
-                text: '客户当前进度统计',
                 left:'left'
             },
             tooltip: {
@@ -144,7 +143,7 @@
         var line = echarts.init(document.getElementById("line"));
         line.setOption({
             title: {
-                text: "客户当前进度统计",
+
                 left: 'center'
             },
             tooltip: {},

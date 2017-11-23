@@ -7,7 +7,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>凯盛软件CRM | 账号管理</title>
+    <title>凯盛软件CRM | 公司网盘</title>
     <%@include file="../include/css.jsp"%>
     <link rel="stylesheet" href="/static/plugins/webuploader/webuploader.css">
     <style>
@@ -85,7 +85,7 @@
                                 <tr>
                                     <td colspan="4">
                                         <c:choose>
-                                            <c:when test="${disk.name.endsWith('.pdf') or disk.name.endsWith('.doc') or disk.name.endsWith('xls') or disk.name.endsWith('.jpg') or disk.name.endsWith('.png') or disk.name.endsWith('.bmp') or disk.name.endsWith('.gif')}">
+                                            <c:when test="${disk.name.endsWith('.pdf') or disk.name.endsWith('.doc') or disk.name.endsWith('xls') or disk.name.endsWith('.jpg') or  disk.name.endsWith('.jpeg') or disk.name.endsWith('.png') or disk.name.endsWith('.bmp') or disk.name.endsWith('.gif')}">
                                                 <a href="/disk/download?_=${disk.id}" target="_blank" class="btn btn-sm btn-success"><i class="fa fa-search"></i> 在线预览</a>
                                                 <a href="/disk/download?_=${disk.id}&fileName=${disk.name}" class="btn btn-sm btn-info"><i class="fa fa-download"></i> 下载</a>
                                             </c:when>

@@ -180,30 +180,33 @@
       <include refid="Example_Where_Clause" />
     </if>
   </select>
+
     <select id="findByAccountId" resultType="com.kaishengit.crm.entity.Task">
       SELECT
-        task.*, cust.cust_name,
-        cust.job_title,
-        cust.mobile,
-        cust.address,
-        cust.trade,
-        cust.source,
-        cust.`level`,
-        cust.mark,
-        cust.account_id AS cust_account_id,
-        cust.last_contract_time,
-        cust.create_time AS cust_create_time,
-        cust.update_time,
-        cust.reminder,
-        cust.sex,
-        sale.`name`,
-        sale.cust_id AS sale_cust_id,
-        sale.worth,
-        sale.progress,
-        sale.content,
-        sale.create_time AS sale_create_time,
-        sale.last_time,
-        sale.account_id AS sale_account_id
+        task.*, cust.cust_name AS 'customer.custName',
+        cust.id AS 'customer.id',
+        cust.job_title AS 'customer.jobTitle',
+        cust.mobile AS 'customer.mobile',
+        cust.address AS 'customer.address',
+        cust.trade AS 'customer.trade',
+        cust.source AS 'customer.source',
+        cust.`level`AS 'customer.level',
+        cust.mark AS 'customer.mark',
+        cust.account_id AS 'customer.accountId',
+        cust.last_contract_time AS 'customer.lastContractTime',
+        cust.create_time AS 'customer.createTime',
+        cust.update_time AS 'customer.updateTime',
+        cust.reminder AS 'customer.reminder',
+        cust.sex AS 'customer.sex',
+        sale.id AS 'saleChance.id',
+        sale.`name`AS 'saleChance.name',
+        sale.cust_id AS 'saleChance.custId',
+        sale.worth AS 'saleChance.worth',
+        sale.progress AS 'saleChance.progress',
+        sale.content AS 'saleChance.content',
+        sale.create_time AS 'saleChance.createTime',
+        sale.last_time AS 'saleChance.lastTime',
+        sale.account_id AS 'saleChance.accountId'
       FROM
         task
       LEFT JOIN customer AS cust ON task.cust_id = cust.id

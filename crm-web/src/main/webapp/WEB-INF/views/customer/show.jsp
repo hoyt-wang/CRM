@@ -109,17 +109,23 @@
                             </div>
                         </div>
                         <div class="box-body">
-                            <ul class="list-group">
+                            <ul class="todo-list">
                                 <c:forEach items="${taskList}" var="task">
-                                    <li class="${task.done == 1? 'done' : ''}">
-                                        <input type="checkbox">
-                                        <a href="/task/list"> <span class="text">${task.title}</span></a>
-                                        <small class="label label-danger"><i class="fa fa-clock-o"></i> ${task.finishTime}</small>
-                                        <%--<div class="tools">
-                                            <i class="fa fa-edit"></i>
-                                            <i class="fa fa-trash-o"></i>
-                                        </div>--%>
-                                    </li>
+                                    <c:if test="${task.done==0}">
+                                   <%-- <li class="${task.done==1 ? 'done' : ''}">
+                                        <input type="checkbox" class="taskCheckbox" ${task.done==1 ? 'checked' : ''} value="${task.id}">
+--%>
+                                          <div class="form-group">
+                                              <a href="/task/list"> <span class="text">${task.title}</span></a>
+                                              <small class="label label-danger"><i class="fa fa-clock-o"></i> ${task.finishTime}</small>
+                                          </div>
+                                            <%--<div class="tools">
+                                                <i class="fa fa-edit"></i>
+                                                <i class="fa fa-trash-o"></i>
+                                            </div>--%>
+
+                                    <%--</li>--%>
+                                    </c:if>
                                 </c:forEach>
                             </ul>
                         </div>
@@ -134,6 +140,65 @@
                     </div>
                 </div>
             </div>
+
+            <%--用户选择对话框（转交他人）--%>
+            <div class="modal fade" id="chooseUserModel">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">请选择转入账号</h4>
+                        </div>
+                        <div class="modal-body">
+                            <select id="userSelect" class="form-control">
+                                <c:forEach items="${accountList}" var="account">
+                                    <c:if test="${account.id != customer.accountId}">
+                                        <option value="${account.id}">${account.userName} (${account.mobile})</option>
+                                    </c:if>
+                                </c:forEach>
+                            </select>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                            <button type="button" class="btn btn-primary" id="saveTranBtn">确定</button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+
+            <%--添加新任务Modal--%>
+            <div class="modal fade" id="addTaskModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">新增待办事项</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form action="/customer/my/${customer.id}/task/new" method="post" id="saveTaskForm">
+                                <input type="hidden" name="accountId" value="${sessionScope.curr_account.id}">
+                                <input type="hidden" name="custId" value="${customer.id}">
+                                <div class="form-group">
+                                    <label>任务名称</label>
+                                    <input type="text" class="form-control" name="title">
+                                </div>
+                                <div class="form-group">
+                                    <label>完成日期</label>
+                                    <input type="text" class="form-control" id="datepicker" name="finishTime">
+                                </div>
+                                <div class="form-group">
+                                    <label>提醒时间</label>
+                                    <input type="text" class="form-control" id="datepicker2" name="remindTime">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                            <button type="button" class="btn btn-primary" id="saveTaskBtn">保存</button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
 
         </section>
         <!-- /.content -->
@@ -213,64 +278,7 @@
         </div>
         &lt;%&ndash;编辑客户模态框结束&ndash;%&gt;
     </div>--%>
-    <%--用户选择对话框（转交他人）--%>
-    <div class="modal fade" id="chooseUserModel">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">请选择转入账号</h4>
-                </div>
-                <div class="modal-body">
-                    <select id="userSelect" class="form-control">
-                        <c:forEach items="${accountList}" var="account">
-                            <c:if test="${account.id != customer.accountId}">
-                                <option value="${account.id}">${account.userName} (${account.mobile})</option>
-                            </c:if>
-                        </c:forEach>
-                    </select>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                    <button type="button" class="btn btn-primary" id="saveTranBtn">确定</button>
-                </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
 
-    <%--添加新任务Modal--%>
-    <div class="modal fade" id="taskModal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">新增待办事项</h4>
-            </div>
-            <div class="modal-body">
-                <form action="/customer/my/${customer.id}/task/new" method="post" id="saveTaskForm">
-                    <input type="hidden" name="accountId" value="${sessionScope.curr_account.id}">
-                    <input type="hidden" name="custId" value="${customer.id}">
-                    <div class="form-group">
-                        <label>任务名称</label>
-                        <input type="text" class="form-control" name="title">
-                    </div>
-                    <div class="form-group">
-                        <label>完成日期</label>
-                        <input type="text" class="form-control" id="datepicker" name="finishTime">
-                    </div>
-                    <div class="form-group">
-                        <label>提醒时间</label>
-                        <input type="text" class="form-control" id="datepicker2" name="remindTime">
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-primary" id="saveTaskBtn">保存</button>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
 
 </div>
 <!-- ./wrapper -->
@@ -282,6 +290,7 @@
 <script src="/static/plugins/validate/jquery.validate.min.js"></script>
 <script>
     $(function () {
+
 
         var customerId = ${customer.id};
         //alert(accountId);
@@ -316,6 +325,19 @@
             });
         });
 
+
+        //添加待办事项
+        $("#showAddTaskModal").click(function () {
+            $("#addTaskModal").modal({
+                show:true,
+                backdrop:'static'
+            });
+        });
+
+        $("#saveTaskBtn").click(function () {
+            $("#saveTaskForm").submit();
+        });
+
         var picker = $('#datepicker').datepicker({
             format: "yyyy-mm-dd",
             language: "zh-CN",
@@ -337,16 +359,6 @@
             todayHighlight: true
         });
 
-        //添加待办事项
-        $("#showAddTaskModal").click(function () {
-            $("#taskModal").modal({
-                show:true,
-                backdrop:'static'
-            });
-        });
-        $("#saveTaskBtn").click(function () {
-            $("#saveTaskForm").submit();
-        });
         $("#saveTaskForm").validate({
             errorClass:"text-danger",
             errorElement:"span",
@@ -367,6 +379,21 @@
                 }
             }
         });
+
+
+        //修改状态
+  /*      $(".taskCheckbox").click(function () {
+            var id = $(this).val();
+            var checked = $(this)[0].checked;
+            if(checked) {
+                window.location.href = "/customer/"+id+"/state/done";
+            } else {
+                window.location.href = "/customer/"+id+"/state/undone"
+            }
+        });*/
+
+
+
 
         /* //编辑客户
          $("#editCustomer").click(function(){

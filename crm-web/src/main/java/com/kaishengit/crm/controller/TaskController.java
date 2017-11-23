@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  * Created by hoyt on 2017/11/14.
@@ -35,8 +36,11 @@ public class TaskController extends BaseController{
                        ,HttpSession session, Model model) {
         Account account = getCurrAccount(session);
         boolean showAll = "all".equals(show) ? true : false;
-        PageInfo<Task> pageInfo = taskService.pageForTask(pageNo,account.getId(),showAll);
-        model.addAttribute("pageInfo",pageInfo);
+        //PageInfo<Task> pageInfo = taskService.pageForTask(pageNo,account.getId(),showAll);
+        //model.addAttribute("pageInfo",pageInfo);
+
+        List<Task> taskList = taskService.findTaskList(account.getId(),showAll);
+        model.addAttribute("taskList",taskList);
         return "task/list";
     }
 

@@ -166,19 +166,28 @@
                             </div>
                         </div>
                         <div class="box-body">
-                            <ul class="list-group">
+                            <ul class="todo-list">
                                 <c:forEach items="${taskList}" var="task">
-                                    <li class="${task.done == 1 ? 'done' : ''}">
-                                        <input type="checkbox">
-                                        <a href="/task/list"> <span class="text">${task.title}</span></a>
-                                        <small class="label label-danger"><i class="fa fa-clock-o"></i> ${task.finishTime}</small>
-                                            <%--<div class="tools">
-                                                <i class="fa fa-edit"></i>
-                                                <i class="fa fa-trash-o"></i>
-                                            </div>--%>
-                                    </li>
+                                    <c:if test="${task.done==0}">
+                                        <%-- <li class="${task.done==1 ? 'done' : ''}">
+                                             <input type="checkbox" class="taskCheckbox" ${task.done==1 ? 'checked' : ''} value="${task.id}">
+     --%>
+
+                                            <div class="form-group">
+                                                <a href="/task/list"> <span class="text">${task.title}</span></a>
+                                                <small class="label label-danger"><i class="fa fa-clock-o"></i> ${task.finishTime}</small>
+                                            </div>
+
+                                        <%--<div class="tools">
+                                            <i class="fa fa-edit"></i>
+                                            <i class="fa fa-trash-o"></i>
+                                        </div>--%>
+
+                                        <%--</li>--%>
+                                    </c:if>
                                 </c:forEach>
                             </ul>
+
                         </div>
                     </div>
                     <div class="box">
@@ -271,7 +280,7 @@
                         </div>
                     </div><!-- /.modal-content -->
                 </div><!-- /.modal-dialog -->
-
+            </div>
         </section>
         <!-- /.content -->
     </div>

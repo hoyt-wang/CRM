@@ -27,6 +27,14 @@ public interface TaskService {
     PageInfo<Task> pageForTask(Integer pageNo, Integer accountId,boolean showAll);
 
     /**
+     * 获得待办事项列表(不分页)
+     * @param accountId
+     * @param showAll
+     * @return
+     */
+    List<Task>  findTaskList(Integer accountId,boolean showAll);
+
+    /**
      * 根据客户id获得事项列表
      * @param id
      * @return

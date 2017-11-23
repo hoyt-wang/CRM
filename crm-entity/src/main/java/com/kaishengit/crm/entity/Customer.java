@@ -158,4 +158,6 @@ public class Customer implements Serializable {
     public void setSex(String sex) {
         this.sex = sex;
     }
+
+
 }

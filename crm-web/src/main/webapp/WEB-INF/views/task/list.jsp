@@ -51,7 +51,7 @@
                 <div class="box-body">
 
                     <ul class="todo-list">
-                        <c:forEach items="${pageInfo.list}" var="task">
+                        <c:forEach items="${taskList}" var="task">
                             <li class="${task.done==1 ? 'done' : ''}">
                                 <input type="checkbox" class="taskCheckbox" ${task.done==1 ? 'checked' : ''} value="${task.id}">
                                 <span class="text">${task.title}</span>
@@ -59,7 +59,7 @@
                                          <c:when test="${not empty task.customer and not empty task.customer.id}">
                                              <a href="/customer/my/${task.customer.id}"><i class="fa fa-user-o"></i> ${task.customer.custName}</a>
                                          </c:when>
-                                         <c:when test="${not empty task.saleChance and not empty task.saleChance.id}">
+                                         <c:when test="${not empty task.saleChance and not empty task.saleId}">
                                              <a href="/record/my/${task.saleChance.id}"><i class="fa fa-money"></i> ${task.saleChance.name}</a>
                                          </c:when>
                                      </c:choose>

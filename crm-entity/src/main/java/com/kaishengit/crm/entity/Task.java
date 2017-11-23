@@ -126,6 +126,23 @@ public class Task implements Serializable {
         this.createTime = createTime;
     }
 
+    @Override
+    public String toString() {
+        return "Task{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", finishTime='" + finishTime + '\'' +
+                ", remindTime='" + remindTime + '\'' +
+                ", done=" + done +
+                ", accountId=" + accountId +
+                ", custId=" + custId +
+                ", saleId=" + saleId +
+                ", createTime=" + createTime +
+                ", customer=" + customer +
+                ", saleChance=" + saleChance +
+                '}';
+    }
+
     /**
      * 判断是否逾期
      * @return true 逾期 false 正常

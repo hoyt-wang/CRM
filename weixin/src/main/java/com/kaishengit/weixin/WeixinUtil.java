@@ -153,6 +153,11 @@ public class WeixinUtil {
         }
     }
 
+    /**
+     * 发送消息给用户
+     * @param userIdList
+     * @param message
+     */
     public void sendMessage(List<Integer> userIdList,String message) {
         String url = String.format(POST_SEND_MESSAGE_URL,getAccessToken(ACCESSTOKEN_TYPE_NORMAL));
         StringBuilder stringBuilder = new StringBuilder();
@@ -163,7 +168,7 @@ public class WeixinUtil {
         idString = idString.substring(0,idString.lastIndexOf("|"));
 
         Map<String,Object> data = new HashMap<String, Object>();
-        data.put("touser","王辉");
+        data.put("touser","WangHui");
         data.put("msgtype","text");
         data.put("agentid",agentId);
         Map<String,String> messageMap = new HashMap<String, String>();

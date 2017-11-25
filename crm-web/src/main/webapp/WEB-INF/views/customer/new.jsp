@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -39,7 +40,7 @@
                 </div>
                 <div class="box-body">
                     <form action="" method="post" id="addForm">
-                        <input type="hidden" name="accountId" value="${sessionScope.curr_account.id}">
+                        <input type="hidden" name="accountId" value="<shiro:principal property="id"/> ">
                         <div class="form-group">
                             <label>姓名</label>
                             <input type="text" name="custName" class="form-control">

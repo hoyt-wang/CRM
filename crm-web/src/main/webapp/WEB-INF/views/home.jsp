@@ -54,7 +54,9 @@
                     </div>
                 </div>
                 <div class="box-body">
-                    Start creating your amazing application!
+                    <shiro:hasRole name="工程部">
+                        <h4>工程部</h4>
+                    </shiro:hasRole>
                 </div>
                 <!-- /.box-body -->
                 <div class="box-footer">

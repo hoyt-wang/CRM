@@ -14,6 +14,9 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="/static/dist/css/AdminLTE.min.css">
 
+    <link rel="stylesheet" href="/static/dist/css/skins/_all-skins.min.css">
+    <link rel="stylesheet" href="/static/plugins/iCheck/square/blue.css">
+
     <!-- AdminLTE Skins. Choose a skin from the css/skins
          folder instead of downloading all of them to reduce the load. -->
     <link rel="stylesheet" href="/static/dist/css/skins/_all-skins.min.css">
@@ -56,8 +59,11 @@
             <div class="row">
                 <div class="col-xs-8">
                     <div class="checkbox icheck">
-                        <label>
-                            <a href="#">忘记密码</a><br>
+                        <label class="">
+                            <div class="icheckbox_square-blue">
+                                <input type="checkbox" value="true" name="rememberMe">
+                            </div>
+                            记住我
                         </label>
                     </div>
                 </div>
@@ -80,9 +86,14 @@
 <script src="/static/plugins/jQuery/jquery-2.2.3.min.js"></script>
 <!-- Bootstrap 3.3.6 -->
 <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/plugins/iCheck/icheck.min.js"></script>
 <script>
     $(function () {
-
+        $('input').iCheck({
+            checkboxClass: 'icheckbox_square-blue',
+            radioClass: 'iradio_square-blue',
+            increaseArea: '20%' // optional
+        });
     });
 </script>
 </body>

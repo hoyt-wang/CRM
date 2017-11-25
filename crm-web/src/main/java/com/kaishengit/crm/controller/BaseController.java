@@ -1,5 +1,6 @@
 package com.kaishengit.crm.controller;
 
+import com.kaishengit.crm.auth.ShiroUtil;
 import com.kaishengit.crm.controller.exception.ForbideenException;
 import com.kaishengit.crm.controller.exception.NotFoundException;
 import com.kaishengit.crm.entity.Account;
@@ -25,7 +26,8 @@ public abstract class BaseController {
      * @return
      */
     public Account getCurrAccount(HttpSession session) {
-        return (Account) session.getAttribute("curr_account");
+        //return (Account) session.getAttribute("curr_account");
+        return ShiroUtil.getCurrentAccount();
     }
 
   /*  *//**

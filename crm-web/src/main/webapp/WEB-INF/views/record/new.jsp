@@ -2,6 +2,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -65,7 +66,7 @@
                 </div>
                 <div class="box-body">
                     <form action="" method="post" id="addForm">
-                        <input type="hidden" name="accountId" value="${sessionScope.curr_account.id}">
+                        <input type="hidden" name="accountId" value="<shiro:principal property="id"/> ">
                         <div class="form-group">
                             <label>记录名称</label>
                             <input type="text" name="name" class="form-control">
@@ -80,7 +81,7 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label id="content"></label>
+                            <label id="content">机会价值</label>
                             <input type="text" name="worth" id="worth" class="form-control">
                         </div>
 

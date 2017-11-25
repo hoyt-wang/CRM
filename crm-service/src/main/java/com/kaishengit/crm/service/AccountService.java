@@ -76,4 +76,18 @@ public interface AccountService {
      * @param confirmPassword
      */
     void changePassword(Account account,String password, String newPassword, String confirmPassword);
+
+    /**
+     * 根据手机号查找账号
+     * @param mobile
+     * @return
+     */
+    Account findByMobile(String mobile);
+
+    /**
+     * 根据id获得所有所属部门
+     * @param accountId
+     * @return
+     */
+    List<Dept> findDeptByAccountId(Integer accountId);
 }

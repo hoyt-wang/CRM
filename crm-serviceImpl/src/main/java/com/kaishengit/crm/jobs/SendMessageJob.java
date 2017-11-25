@@ -36,7 +36,7 @@ public class SendMessageJob implements Job{
             jmsTemplate.send("weixinMessage-queue", new MessageCreator() {
                 @Override
                 public Message createMessage(Session session) throws JMSException {
-                    String json = "{\"id\":\"王辉\",\"message\":\"hello,jms123321\"}";
+                    String json = "{\"id\":\"1\",\"message\":\"hello,jms123321\"}";
                     TextMessage textMessage = session.createTextMessage(json);
                     return textMessage;
                 }

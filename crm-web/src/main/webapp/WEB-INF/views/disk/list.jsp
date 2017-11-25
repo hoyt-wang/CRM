@@ -2,6 +2,7 @@
 <%@ taglib prefix="fm" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -186,8 +187,7 @@
 <script>
     $(function(){
         var pId = ${not empty requestScope.disk ? requestScope.disk.id : '0'};
-        var accountId = ${sessionScope.curr_account.id};
-
+            var  accountId = <shiro:principal property="id"/>
         //添加新文件夹
         $("#showNewFolderModal").click(function () {
             layer.prompt({title:"请输入文件夹名称"},function(text,index){

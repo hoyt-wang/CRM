@@ -150,7 +150,7 @@ public class CustomerController extends BaseController{
     public String editProduct(Customer customer,RedirectAttributes redirectAttributes) {
         customerService.editCustomer(customer);
         redirectAttributes.addFlashAttribute("message","修改成功");
-        return "redirect:/customer/"+customer.getId();
+        return "redirect:/customer/my/"+customer.getId();
     }
 
     /**

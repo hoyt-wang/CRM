@@ -299,13 +299,13 @@
                     name:"deptName"
                 }
             },
+
             async:{
                 enable:true,
                 url:"/employee/dept.json",
                 type:"get",
                 dataFilter:ajaxDataFilter
             },
-
             callback:{
                 onClick:function(event,treeId,treeNode,clickFlag){
                     //alert(treeNode.id + treeNode.deptName + treeNode.pId);
@@ -328,6 +328,9 @@
             }
             return responseData;
         }
+
+
+
         /*var zNodes =[
          { id:1, pId:0, name:"凯盛软件", open:true},
          { id:11, pId:1, name:"开发部"},
